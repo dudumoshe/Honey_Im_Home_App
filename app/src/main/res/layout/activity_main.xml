@@ -7,12 +7,52 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/status_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clear_home"
+        android:layout_marginTop="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/start_tracking_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Tracking Location"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/set_location_as_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Location As Home"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/start_tracking_location" />
+
+    <Button
+        android:id="@+id/clear_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Clear Home"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/set_location_as_home" />
+
+    <TextView
+        android:id="@+id/home_location_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="179dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="173dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/status_message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
