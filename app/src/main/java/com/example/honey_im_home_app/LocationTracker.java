@@ -55,6 +55,10 @@ public class LocationTracker extends LocationCallback {
     }
 
     public void startTracking() {
+        if (isTracking) {
+            Log.d("LocationTracker", "Tracker is already turned on");
+            return;
+        }
         boolean hasPermissions = ActivityCompat.checkSelfPermission(this.context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         if(!hasPermissions) {
@@ -68,6 +72,10 @@ public class LocationTracker extends LocationCallback {
     }
 
     public void stopTracking() {
+        if (!isTracking) {
+            Log.d("LocationTracker", "Tracker is already turned off");
+            return;
+        }
         if (fusedLocationProviderClient != null) {
             fusedLocationProviderClient.removeLocationUpdates(this);
         }

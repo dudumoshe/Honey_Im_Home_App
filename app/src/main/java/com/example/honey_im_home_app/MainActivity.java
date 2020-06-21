@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.Constraints;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -22,6 +24,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.concurrent.TimeUnit;
+
 public class MainActivity extends AppCompatActivity {
     private SharedPreferences sp;
     private BroadcastReceiver locationBroadcastReciever;
@@ -29,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private static int REQUEST_LOCATION_PERMISSION = 3654;
     private static int SEND_SMS_PERMISSION = 3612;
     private static String SMS_CONTENT = "Honey I'm Sending a Test Message!";
+    public static String SP_DATA = "HomeLocationData";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +43,13 @@ public class MainActivity extends AppCompatActivity {
         setupClearHomeLocationButton();
         setupSetSMSPhoneButton();
         setupTestSMSButton();
-        sp = getSharedPreferences("HomeLocationData", MODE_PRIVATE);
+        sp = getSharedPreferences(SP_DATA, MODE_PRIVATE);
         String homeLocation = sp.getString("homeLocation", null);
         String phoneNumber = sp.getString("userPhoneNumber", null);
         onSetHomeLocation(homeLocation);
         onSetPhoneNumber(phoneNumber);
         listenLocationChanges();
+        startTrackLocationWork();
 
         findViewById(R.id.start_tracking_location).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void trackerStartOrStop() {
         LocationTracker locationTracker = ((HoneyImHomeApp)getApplicationContext()).locationTracker;
         Button turnTrackerOnButton = findViewById(R.id.start_tracking_location);
@@ -288,5 +295,14 @@ public class MainActivity extends AppCompatActivity {
                 onSetHomeLocation(location);
             }
         });
+    }
+
+    private void startTrackLocationWork() {
+        Log.d("Main Activity", "set sms home work every 15 mins");
+        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(HomeLocationWorker.class,
+                15, TimeUnit.MINUTES)
+                .setConstraints(Constraints.NONE)
+                .build();
+        WorkManager.getInstance(this).enqueue(periodicWorkRequest);
     }
 }
